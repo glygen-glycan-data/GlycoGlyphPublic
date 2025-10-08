@@ -1,9 +1,9 @@
-//  v2.1.9 Copyright 2022 Akul Mehta
+//  v2.2.0 Copyright 2025 Akul Mehta
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.glycoglyph = {}));
-}(this, (function (exports) { 'use strict';
+})(this, (function (exports) { 'use strict';
 
   // This file is a dictionary of all monosaccharides with default configurations
   // TODO: check https://www.genome.jp/kegg/catalog/codes2.html to make sure the configuration and rings are correct
@@ -1713,7 +1713,11 @@
         var parentAttachmentPos = link.charAt(link.length - 1),
           childAttachmentPos = link.charAt(link.indexOf('-') - 1);
 
-        if (parentAttachmentPos === "?") { parentAttachmentPos = "-1"; }      if (childAttachmentPos === "?") { childAttachmentPos = "1"; }      LIN += `${LINcount}:${parentRES}o(${parentAttachmentPos}+${childAttachmentPos})${parentCount}d\n`;
+        if (parentAttachmentPos === "?") { parentAttachmentPos = "-1"; }      if (childAttachmentPos === "?") { 
+          // For sialic acids, default child attachment position is 2, not 1
+          var sialicAcids = ['Neu5Ac', 'Neu5Gc', 'Neu', 'Sia', 'Kdn'];
+          childAttachmentPos = sialicAcids.includes(thismono) ? "2" : "1";
+        }      LIN += `${LINcount}:${parentRES}o(${parentAttachmentPos}+${childAttachmentPos})${parentCount}d\n`;
         LINcount++;
       }
 
@@ -2235,7 +2239,7 @@
     }
 
     //create a div to draw the glycans
-    var div = d3
+    d3
       .select('#' + configuration.drawdivID)
       .append('div')
       .attr('id', `${configuration.drawdivID}sub`);
@@ -2489,11 +2493,11 @@
         //get the x-limits for the child nodes of the parent of the fucose
         // if (d.parent.depth === 0) { return; }
         if (d.depth === 0) { return; }
-        var xmin = d.parent.children[0].x;
-        var xmax = d.parent.children[d.parent.children.length - 1].x;
+        d.parent.children[0].x;
+        d.parent.children[d.parent.children.length - 1].x;
         //count number of non-fucose children
-        var nonfucchild = d.parent.children.filter((e) => { return e.data.name.search('Fuc') === -1 }).length;
-        var allchildren = d.parent.children.length;
+        d.parent.children.filter((e) => { return e.data.name.search('Fuc') === -1 }).length;
+        d.parent.children.length;
 
         //drop the fucose to the level of its parent node
         d.y = d.parent.y;
@@ -2817,7 +2821,7 @@
 
     g.html(mono.innerhtml);
 
-    let name = svg.append("g")
+    svg.append("g")
       .attr("transform", "translate(50%,50)")
       .append("text")
       .text(mono.id)
@@ -3123,7 +3127,7 @@
       let glycanjson = JSON.stringify(glycanobj); //recreate the JSON for the glycan
       let glycoCT = jsonToGlycoCT(glycanjson); //get the glycoCT
       // build the url to query GlyTouCan
-      let url = "https://api.glycosmos.org/glycanformatconverter/2.7.0/glycoct2wurcs/";
+      let url = "https://api.glycosmos.org/glycanformatconverter/2.10.4/glycoct2wurcs/";
       url += encodeURI(glycoCT);
 
       types[i].primary = (types[i].anomer == primaryanomer) ? true : false;
@@ -3198,7 +3202,7 @@
       });
 
 
-      var use = $(`#${svgid} use`).each(function (i) {
+      $(`#${svgid} use`).each(function (i) {
           var href = this.getAttribute('href');
           if (href === null) { return }
           var obj = {
@@ -3665,7 +3669,7 @@
     'mN' : '[mod]HexNAc',
   };
 
-  let version = 'v2.1.9';
+  let version = 'v2.2.0';
 
 
 
@@ -3729,4 +3733,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
