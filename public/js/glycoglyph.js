@@ -2996,13 +2996,21 @@
       .then(data => {
         // The API returns an array, so we take the first element
         const result = data[0];
+        console.log('GlyTouCan API response:', result); // Debug log to see actual response
+        
         if (result.id === undefined) { 
           // Check if we have a message indicating the structure is valid but not in database
-          if (result.message && result.message.includes("Accession not found") && result.wurcs) {
+          if (result.message && (result.message.includes("Accession not found") || result.message.includes("accession not found")) && result.wurcs) {
             return {
               id: "Not in Database",
               response: "Not Available",
               wurcs: result.wurcs
+            };
+          } else if (result.message && (result.message.includes("Accession not found") || result.message.includes("accession not found"))) {
+            // Handle case where we have accession not found but no WURCS
+            return {
+              id: "Not in Database",
+              response: "Not Available"
             };
           } else {
             // Actual error in structure
