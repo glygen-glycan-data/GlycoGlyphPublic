@@ -136,6 +136,67 @@ async function fetchGlyTouCan(url) {
   return glytoucan;
 }
 
+async function fetchGlyTouCanPost(url, glycoCT) {
+  // Check if glycoCT is valid before making the request
+  if (!glycoCT || glycoCT.trim() === '' || glycoCT === 'Hello') {
+    console.error('Invalid GlycoCT generated:', glycoCT);
+    return {
+      id: undefined,
+      response: 'Error in Structure'
+    };
+  }
+
+  let glytoucan = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify([glycoCT])
+  })
+    .then(resp => resp.json())
+    .then(data => {
+      // The API returns an array, so we take the first element
+      const result = data[0];
+
+      if (result.id === undefined) { 
+        // Check if we have a message indicating the structure is valid but not in database
+        if (result.message && result.message.toLowerCase().includes("accession not found")) {
+          console.log('Structure is valid but not in GlyTouCan database - showing as Not Available');
+          return {
+            id: "Not in Database",
+            response: "Not Available",
+            wurcs: result.wurcs || undefined
+          };
+        } else {
+          // Actual error in structure
+          console.log('Actual structure error detected');
+          return {
+            id: result.id,
+            response: 'Error in Structure'
+          };
+        }
+      } else if (result.id === "no accnumber" || result.id === "") { //if No Accession Number 
+        return {
+          id: result.id,
+          response: "Not Available"
+        };
+      } else { // If successful retrieval of accession number populate the table
+        return {
+          id: result.id,
+          response: "Success"
+        };
+      }
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+      return {
+        id: undefined,
+        response: "Error Connecting"
+      }
+    });
+  return glytoucan;
+}
+
 export async function fetchGlyGenData(id) {
   if (id === "") {
     console.log('GlyTouCan ID is missing');
@@ -256,13 +317,13 @@ export async function getGTCID(name, glygen = false) {
     glycanobj.anomer = types[i].anomer; //set the anomer type for the glycan
     let glycanjson = JSON.stringify(glycanobj); //recreate the JSON for the glycan
     let glycoCT = jsonToGlycoCT(glycanjson); //get the glycoCT
-    // build the url to query GlyTouCan
-    let url = "https://api.glycosmos.org/glycanformatconverter/2.7.0/glycoct2wurcs/"
-    url += encodeURI(glycoCT);
+    
+    // Use POST request for GlyTouCan to handle large structures
+    let url = "https://api.glycosmos.org/glycanformatconverter/2.10.4/glycoct2wurcs";
 
     types[i].primary = (types[i].anomer == primaryanomer) ? true : false;
 
-    types[i].glytoucan = await fetchGlyTouCan(url);
+    types[i].glytoucan = await fetchGlyTouCanPost(url, glycoCT);
 
     if (glygen && types[i].glytoucan.response == 'Success') {
       // console.log('Found Glytoucan ID checking other databases');

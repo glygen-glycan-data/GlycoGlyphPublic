@@ -1,4 +1,15 @@
 All changes to the project will be documented in this file
+
+## 2.2.0 - 2025-10-09
+### Fixed
+- Fixed issue [#41](https://github.com/akulmehta/GlycoGlyphPublic/issues/41) related to GlycoCT generation
+- Fixed errors in output to better indicate when GlyTouCan ID is not available
+- Fixed API calls to Glycosmos to updated API version.
+
+### Changed
+- Updated README.md with improved developer documentation and setup instructions
+- Updated version number to 2.2.0
+
 ## 2.1.9 - 2022-04-22
 - Fixed several issues with external APIs and links.
 - Fixed issues #34 and #35
@@ -6,6 +17,7 @@ All changes to the project will be documented in this file
 
 ## 2.1.8 - 2021-10-19
 - Added ability to convert pGlyco3 plausible structure to glycoglyph compatible name. Enter name in pGlyco3 format and click on check name and it will prompt you to convert the name to valid format.
+  - Example: `(N(N(H(H(H)(H))(H(mN(H))))))` converts pGlyco3 single-letter codes (N=HexNAc, A=Neu5Ac, H=Hex, F=Fuc) to GlycoGlyph linear nomenclature
 
 ## 2.1.7 - 2021-01-13
 ### Added
