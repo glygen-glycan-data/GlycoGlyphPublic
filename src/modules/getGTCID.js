@@ -157,24 +157,19 @@ async function fetchGlyTouCanPost(url, glycoCT) {
     .then(data => {
       // The API returns an array, so we take the first element
       const result = data[0];
-      console.log('GlyTouCan API response:', result); // Debug log to see actual response
-      
+
       if (result.id === undefined) { 
         // Check if we have a message indicating the structure is valid but not in database
-        if (result.message && (result.message.includes("Accession not found") || result.message.includes("accession not found")) && result.wurcs) {
+        if (result.message && result.message.toLowerCase().includes("accession not found")) {
+          console.log('Structure is valid but not in GlyTouCan database - showing as Not Available');
           return {
             id: "Not in Database",
             response: "Not Available",
-            wurcs: result.wurcs
-          };
-        } else if (result.message && (result.message.includes("Accession not found") || result.message.includes("accession not found"))) {
-          // Handle case where we have accession not found but no WURCS
-          return {
-            id: "Not in Database",
-            response: "Not Available"
+            wurcs: result.wurcs || undefined
           };
         } else {
           // Actual error in structure
+          console.log('Actual structure error detected');
           return {
             id: result.id,
             response: 'Error in Structure'
