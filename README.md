@@ -42,6 +42,49 @@ GlycoGlyph uses the following:
 
 ## Getting Started
 
+### Prerequisites
+- Node.js (version 12 or higher)
+- npm (comes with Node.js)
+
+### Development Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/akulmehta/GlycoGlyphPublic.git
+   cd GlycoGlyphPublic
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start development**
+   ```bash
+   npm run dev
+   ```
+   This command will:
+   - Start a local development server on `http://localhost:3000` (or next available port)
+   - Watch for changes in the `src/` directory
+   - Automatically rebuild the JavaScript bundle when files change
+
+### Available Scripts
+
+- `npm run build` - Build the production bundle (creates `public/js/glycoglyph.js` and `public/js/glycoglyph.min.js`)
+- `npm run watch` - Watch for changes and rebuild automatically
+- `npm run start` - Start the development server (serves the `public/` directory)
+- `npm run dev` - Run both watch and start in parallel (recommended for development)
+
+### Project Structure for Development
+
+The source code is organized as follows:
+- `src/main.js` - Main entry point that exports all modules
+- `src/modules/` - Individual feature modules
+- `public/` - Built files and static assets (served by development server)
+- `rollup.config.js` - Build configuration
+
+When you make changes to files in the `src/` directory, Rollup will automatically rebuild the bundle and place the output in `public/js/`.
+
 The public directory contains files to implement GlycoGlyph on a website.
 
 Use either:
