@@ -82,6 +82,10 @@ export var monos = [
 //list of commonly used monosaccharides
 export var commonMonos = ["Glc", "Man", "Gal", "GlcNAc", "GalNAc", "Fuc", "Neu5Ac", "Neu5Gc", "Neu", "Xyl", "IdoA", "GlcA", "Unknown"];
 
+// For determining default child linkage position
+export var commonMonosExtended = commonMonos + ["Hex","HexNAc","dHex","Sia","Pent","HexA","HexN"]
+export var monos_with_2linkage = ["Neu5Ac", "Neu5Gc", "KDN", "Neu", "Sia"];
+
 //templates holds the starter templates 
 // these can be directly added as names so it is easy
 export var templates = [
